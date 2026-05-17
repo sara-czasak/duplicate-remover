@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections import defaultdict
 
 
 class BtnFunc:
@@ -6,6 +7,7 @@ class BtnFunc:
         # self.scan_btn = scan_btn
         self.system_root = Path(Path.home().anchor)
         self.files = []
+        self.file_size_dict = defaultdict(list)
 
 
     def scan_device(self):
@@ -14,15 +16,20 @@ class BtnFunc:
             try:
                 if i.is_file():
                     self.files.append(i)
-            except PermissionError:
+            except (PermissionError, FileNotFoundError):
                 pass
 
 
-
-
+    def get_size_dict(self):
+        for i in self.files:
+            try:
+                self.file_size_dict[i.stat().st_size].append(i)
+            except (PermissionError, FileNotFoundError):
+                pass
 
 
 if __name__ == '__main__':
     btns = BtnFunc()
     btns.scan_device()
-    print(btns.files)
+    btns.get_size_dict()
+    print(len(btns.file_size_dict))
