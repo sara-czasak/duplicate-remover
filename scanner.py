@@ -8,6 +8,7 @@ class BtnFunc:
         self.system_root = Path(Path.home().anchor)
         self.files = []
         self.file_size_dict = defaultdict(list)
+        self.duplicate_dict = {}
 
 
     def scan_device(self):
@@ -28,8 +29,16 @@ class BtnFunc:
                 pass
 
 
+    def get_duplicates(self):
+        self.duplicate_dict = {k:v for (k, v) in self.file_size_dict.items() if len(v) > 1}
+
+
+
+
+
 if __name__ == '__main__':
     btns = BtnFunc()
     btns.scan_device()
     btns.get_size_dict()
-    print(len(btns.file_size_dict))
+    btns.get_duplicates()
+    print(len(btns.duplicate_dict))
